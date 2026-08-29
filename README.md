@@ -106,26 +106,7 @@ API: `http://localhost:5000`
 
 ### 2. Frontend
 
-```bash
-cd frontend
-npm install
-npm run dev
 ```
-
-App: `http://localhost:5173`
-
-The Vite dev server proxies `/api` to port 5000. You can also set `VITE_API_URL=http://localhost:5000/api`.
-
-### Demo accounts (after seed)
-
-| Role | Email | Password |
-| --- | --- | --- |
-| Admin | `admin@securepay.com` | `Admin@12345` |
-| User | `rahim@securepay.com` | `User@12345` |
-| User | `karim@securepay.com` | `User@12345` |
-| User | `sadia@securepay.com` | `User@12345` |
-
-New self-registered users also receive 100,000 BDT.
 
 ## API documentation
 
@@ -212,15 +193,5 @@ Health check: `GET /api/health`
 - **Risk as a score + level:** The UI can show `LOW/MEDIUM/HIGH` while the score explains *why*.
 - **Logs are append-only:** Reversal never deletes history; status becomes `REVERSED` and a log row is added.
 
-## Future improvements
 
-- Refresh tokens in httpOnly cookies
-- 2FA / device notifications
-- Separate `Wallet` collection and double-entry ledger lines
-- WebSockets for live notification badges
-- CSV export and scheduled statements
-- Stronger device fingerprinting in the fraud model
 
-## License
-
-MIT — built as a hackathon project.
