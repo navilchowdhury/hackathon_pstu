@@ -39,6 +39,14 @@ export const groupApi = {
   remove: (id) => api.delete(`/groups/${id}`),
 };
 
+export const requestApi = {
+  list: () => api.get('/requests'),
+  create: (payload) => api.post('/requests', payload),
+  pay: (id, payload) => api.post(`/requests/${id}/pay`, payload),
+  decline: (id) => api.post(`/requests/${id}/decline`),
+  cancel: (id) => api.post(`/requests/${id}/cancel`),
+};
+
 export const adminApi = {
   users: (params) => api.get('/admin/users', { params }),
   statistics: () => api.get('/admin/statistics'),

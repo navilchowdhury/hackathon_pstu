@@ -13,6 +13,7 @@ import TransactionDetail from './pages/TransactionDetail';
 import Analytics from './pages/Analytics';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
+import RequestMoney from './pages/RequestMoney';
 import Groups from './pages/Groups';
 import GroupDetail from './pages/GroupDetail';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -69,6 +70,16 @@ export default function App() {
               <ProtectedRoute>
                 <Shell>
                   <SendMoney />
+                </Shell>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/app/request"
+            element={
+              <ProtectedRoute>
+                <Shell>
+                  <RequestMoney />
                 </Shell>
               </ProtectedRoute>
             }

@@ -9,6 +9,7 @@ import {
   LogOut,
   ChartNoAxesCombined,
   Users,
+  HandCoins,
   Menu,
   X,
 } from 'lucide-react';
@@ -20,6 +21,7 @@ import Logo from './Logo';
 const nav = [
   { to: '/app', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/app/send', label: 'Send money', icon: Send },
+  { to: '/app/request', label: 'Request money', icon: HandCoins },
   { to: '/app/groups', label: 'Groups', icon: Users },
   { to: '/app/transactions', label: 'Transactions', icon: Receipt },
   { to: '/app/analytics', label: 'Analytics', icon: ChartNoAxesCombined },

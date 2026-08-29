@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, ArrowDownLeft, Send, Receipt, ShieldAlert } from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft, Send, Receipt, ShieldAlert, HandCoins } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { walletApi } from '../api';
 import { Badge, Card, PageHeader, EmptyState } from '../components/ui';
@@ -58,11 +58,16 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <div className="mt-5 grid gap-4 md:grid-cols-3">
+      <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Link to="/app/send" className="rounded-2xl border border-slate-200 bg-white p-4 shadow-card hover:border-brand-200">
           <Send className="text-brand-600" size={20} />
           <p className="mt-3 font-semibold">Send money</p>
           <p className="text-sm text-slate-500">Transfer to email or wallet ID</p>
+        </Link>
+        <Link to="/app/request" className="rounded-2xl border border-slate-200 bg-white p-4 shadow-card hover:border-brand-200">
+          <HandCoins className="text-brand-600" size={20} />
+          <p className="mt-3 font-semibold">Request money</p>
+          <p className="text-sm text-slate-500">Ask another user to pay you</p>
         </Link>
         <Link to="/app/transactions" className="rounded-2xl border border-slate-200 bg-white p-4 shadow-card hover:border-brand-200">
           <Receipt className="text-brand-600" size={20} />

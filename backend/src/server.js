@@ -12,6 +12,7 @@ const transactionRoutes = require('./routes/transaction.routes');
 const notificationRoutes = require('./routes/notification.routes');
 const adminRoutes = require('./routes/admin.routes');
 const groupRoutes = require('./routes/group.routes');
+const requestRoutes = require('./routes/request.routes');
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/groups', groupRoutes);
+app.use('/api/requests', requestRoutes);
 
 app.use((req, res, next) => {
   next(new ApiError(404, `Route not found: ${req.originalUrl}`));
