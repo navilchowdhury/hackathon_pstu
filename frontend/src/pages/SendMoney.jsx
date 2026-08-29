@@ -4,6 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { walletApi, transactionApi } from '../api';
 import { extractError } from '../api/client';
 import { Button, Card, Input, PageHeader } from '../components/ui';
+import TwoFactorSetup from '../components/TwoFactorSetup';
 import { formatBDT } from '../utils/format';
 import { useAuth } from '../context/AuthContext';
 
@@ -11,7 +12,14 @@ export default function SendMoney() {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
   const [wallet, setWallet] = useState(null);
-  const [form, setForm] = useState({ recipient: '', amount: '', description: '', password: '' });
+  const [form, setForm] = useState({
+    recipient: '',
+    amount: '',
+    description: '',
+    password: '',
+    twoFactorToken: '',
+  });
+  const [askCode, setAskCode] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -21,12 +29,13 @@ export default function SendMoney() {
 
   const amount = Number(form.amount) || 0;
   const remaining = wallet?.dailyRemaining ?? 0;
-  const canSend =
+  const detailsReady =
     amount > 0 &&
     form.recipient.trim() &&
     form.password.trim() &&
     amount <= remaining &&
     amount <= (wallet?.balance || 0);
+  const canSend = detailsReady && form.twoFactorToken.trim().length === 6;
 
   const summary = useMemo(
     () => [
@@ -43,6 +52,13 @@ export default function SendMoney() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (!detailsReady) return;
+
+    if (!askCode) {
+      setAskCode(true);
+      return;
+    }
+
     if (!canSend) return;
     setLoading(true);
     try {
@@ -51,11 +67,13 @@ export default function SendMoney() {
         amount,
         description: form.description,
         password: form.password,
+        twoFactorToken: form.twoFactorToken.trim(),
         idempotencyKey: crypto.randomUUID(),
       });
       const txn = res.data.data.transaction;
       toast.success(`Sent ${formatBDT(amount)}`);
-      setForm((prev) => ({ ...prev, password: '' }));
+      setForm((prev) => ({ ...prev, password: '', twoFactorToken: '' }));
+      setAskCode(false);
       navigate(`/app/transactions/${txn.transactionId}`);
     } catch (err) {
       toast.error(extractError(err));
@@ -68,7 +86,8 @@ export default function SendMoney() {
     <div>
       <PageHeader
         title="Send money"
-        subtitle="Confirm with your password. Transfers settle atomically and are scored for risk."
+        subtitle="Confirm with your password and a Google Authenticator code."
+        actions={<TwoFactorSetup />}
       />
       <div className="grid gap-6 lg:grid-cols-5">
         <Card className="p-6 lg:col-span-3">
@@ -103,13 +122,27 @@ export default function SendMoney() {
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
+            {askCode && (
+              <Input
+                label="6-Digit Security Code (Google Authenticator)"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                maxLength={6}
+                required
+                placeholder="000000"
+                value={form.twoFactorToken}
+                onChange={(e) =>
+                  setForm({ ...form, twoFactorToken: e.target.value.replace(/\D/g, '').slice(0, 6) })
+                }
+              />
+            )}
             {amount > remaining && (
               <p className="text-sm text-rose-600">
                 This amount exceeds your remaining daily limit of {formatBDT(remaining)}.
               </p>
             )}
-            <Button className="w-full" disabled={loading || !canSend}>
-              {loading ? 'Processing…' : 'Send now'}
+            <Button className="w-full" disabled={loading || !detailsReady || (askCode && !canSend)}>
+              {loading ? 'Processing…' : askCode ? 'Send now' : 'Send money'}
             </Button>
           </form>
         </Card>

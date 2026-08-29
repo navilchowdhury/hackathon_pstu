@@ -4,6 +4,7 @@ import { ArrowUpRight, ArrowDownLeft, Send, Receipt, ShieldAlert, HandCoins } fr
 import { useAuth } from '../context/AuthContext';
 import { walletApi } from '../api';
 import { Badge, Card, PageHeader, EmptyState } from '../components/ui';
+import TwoFactorSetup from '../components/TwoFactorSetup';
 import { formatBDT, formatDate, statusTone } from '../utils/format';
 
 export default function Dashboard() {
@@ -28,6 +29,7 @@ export default function Dashboard() {
       <PageHeader
         title={`Hello, ${user?.name?.split(' ')[0] || 'there'}`}
         subtitle="Overview of your SecurePay wallet"
+        actions={<TwoFactorSetup />}
       />
 
       <div className="grid gap-5 lg:grid-cols-3">

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { authApi } from '../api';
 import { extractError } from '../api/client';
 import { Button, Card, Input, PageHeader } from '../components/ui';
+import TwoFactorSetup from '../components/TwoFactorSetup';
 import { formatDate } from '../utils/format';
 
 export default function Profile() {
@@ -44,7 +45,11 @@ export default function Profile() {
             <Row label="Wallet ID" value={user?.walletId} />
             <Row label="Role" value={user?.role} />
             <Row label="Member since" value={formatDate(user?.createdAt)} />
+            <Row label="2FA" value={user?.isTwoFactorEnabled ? 'Enabled (TOTP)' : 'Off'} />
           </dl>
+          <div className="mt-5">
+            <TwoFactorSetup />
+          </div>
         </Card>
         <Card className="p-6">
           <h2 className="font-semibold text-navy-800">Update name</h2>

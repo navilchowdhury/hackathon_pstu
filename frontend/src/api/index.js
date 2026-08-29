@@ -5,7 +5,7 @@ export const authApi = {
   login: (payload) => api.post('/auth/login', payload),
   me: () => api.get('/auth/me'),
   updateProfile: (payload) => api.put('/auth/profile', payload),
-  changePassword: (payload) => api.put('/auth/password', payload),
+  setupTwoFactor: () => api.post('/auth/setup-2fa'),
 };
 
 export const walletApi = {

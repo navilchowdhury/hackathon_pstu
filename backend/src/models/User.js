@@ -44,6 +44,14 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    twoFactorSecret: {
+      type: String,
+      select: false,
+    },
+    isTwoFactorEnabled: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
@@ -73,6 +81,7 @@ userSchema.methods.toSafeObject = function toSafeObject() {
     role: this.role,
     walletId: this.walletId,
     walletBalance: this.walletBalance,
+    isTwoFactorEnabled: this.isTwoFactorEnabled !== false,
     createdAt: this.createdAt,
   };
 };

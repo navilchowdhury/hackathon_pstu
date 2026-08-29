@@ -9,6 +9,8 @@ const sendMoney = asyncHandler(async (req, res) => {
     amount: req.body.amount,
     description: req.body.description,
     password: req.body.password,
+    twoFactorToken: req.body.twoFactorToken,
+    requireTwoFactor: true,
     idempotencyKey: req.body.idempotencyKey || req.get('Idempotency-Key'),
   });
 

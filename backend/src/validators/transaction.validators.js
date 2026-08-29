@@ -17,6 +17,7 @@ const sendMoneyRules = [
     }),
   body('description').optional().trim().isLength({ max: 240 }),
   body('password').notEmpty().withMessage('Password is required to confirm this transfer'),
+  body('twoFactorToken').optional().isString(),
   body('idempotencyKey').optional().isString().isLength({ min: 8, max: 80 }),
 ];
 

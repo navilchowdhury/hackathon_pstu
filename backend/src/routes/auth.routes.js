@@ -21,5 +21,6 @@ router.post('/login', authLimiter, loginRules, validate, authController.login);
 router.get('/me', protect, authController.me);
 router.put('/profile', protect, updateProfileRules, validate, authController.updateProfile);
 router.put('/password', protect, changePasswordRules, validate, authController.changePassword);
+router.post('/setup-2fa', protect, authController.setupTwoFactor);
 
 module.exports = router;

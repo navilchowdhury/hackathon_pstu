@@ -14,6 +14,7 @@ const ApiError = require('../utils/ApiError');
 const { runInTransaction } = require('../utils/runTransaction');
 const { assessRisk } = require('./fraud.service');
 const notificationService = require('./notification.service');
+const { verifyTwoFactorToken } = require('./twoFactor.service');
 
 function startOfToday() {
   const d = new Date();
@@ -79,10 +80,19 @@ async function recordFailedAttempt({ sender, receiver, amount, description, reas
   return txn;
 }
 
-async function sendMoney({ senderId, recipient, amount, description, idempotencyKey, password }) {
+async function sendMoney({
+  senderId,
+  recipient,
+  amount,
+  description,
+  idempotencyKey,
+  password,
+  twoFactorToken,
+  requireTwoFactor = false,
+}) {
   amount = Number(amount);
 
-  const sender = await User.findById(senderId).select('+password');
+  const sender = await User.findById(senderId).select('+password +twoFactorSecret');
   if (!sender || !sender.isActive) {
     throw new ApiError(401, 'Account is unavailable');
   }
@@ -98,6 +108,14 @@ async function sendMoney({ senderId, recipient, amount, description, idempotency
   const passwordOk = await sender.comparePassword(password);
   if (!passwordOk) {
     throw new ApiError(400, 'Incorrect password. Transfer cancelled.');
+  }
+
+  // TOTP only for the Send Money route — group/request pay stays password-only.
+  if (requireTwoFactor && sender.isTwoFactorEnabled !== false) {
+    const totpOk = verifyTwoFactorToken(sender.twoFactorSecret, twoFactorToken);
+    if (!totpOk) {
+      throw new ApiError(400, 'Invalid 2FA Authenticator Code');
+    }
   }
 
   if (idempotencyKey) {
